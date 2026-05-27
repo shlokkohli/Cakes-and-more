@@ -2,11 +2,6 @@ import { orderHistory } from '@/lib/orders'
 import Link from 'next/link'
 import type { Orders } from '@/lib/orders'
 
-type Props = Pick<
-  Orders,
-  'title' | 'date' | 'Quantity' | 'status'
->
-
 const page = () => {
   return (
     <div className="flex w-full flex-col rounded-lg border-gray-300 bg-white p-4 shadow-sm shadow-black/10">
@@ -17,7 +12,7 @@ const page = () => {
 
         <Link
           href={'/'}
-          className="mt-4 flex w-full flex-col gap-2"
+          className="mt-4 flex w-full flex-col gap-4 p-2"
         >
           {orderHistory.map((order) => {
             return (

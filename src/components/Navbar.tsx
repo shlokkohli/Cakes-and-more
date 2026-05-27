@@ -22,11 +22,13 @@ const Navbar = () => {
 
         {/* right side */}
         <div className="flex items-center justify-center gap-10">
-          <ShoppingBag
-            height={20}
-            width={20}
-            className="cursor-pointer text-gray-500"
-          />
+          <Link href={'/cart'}>
+            <ShoppingBag
+              height={20}
+              width={20}
+              className="cursor-pointer text-gray-500"
+            />
+          </Link>
           <Link
             href={'/profile'}
             className="flex cursor-pointer items-center justify-center gap-2"
