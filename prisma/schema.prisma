@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  phoneNo String
+  email   String?
+  address Address?
+}
+
+model Address {
+  id      Int    @id @default(autoincrement())
+  tower   String
+  houseNo String
+  Society String
+  userId  Int    @unique
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+model Cake {
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String
+  price       Float
+  types       CakeCakeType[]
+}
+
+model CakeType {
+  id    Int            @id @default(autoincrement())
+  name  String
+  Cakes CakeCakeType[]
+}
+
+model CakeCakeType {
+  id         Int      @id @default(autoincrement())
+  cakeId     Int
+  cake       Cake     @relation(fields: [cakeId], references: [id])
+  CakeTypeId Int
+  cakeType   CakeType @relation(fields: [CakeTypeId], references: [id])
+
+  @@unique([cakeId, CakeTypeId])
+}

@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 const CartItems = () => {
   return (
-    <div className="flex w-full justify-between rounded-lg bg-white p-4">
+    <div className="flex w-full justify-between rounded-lg border border-gray-300 bg-white p-4">
       <div className="flex gap-4">
         <Image
           src={'/chocolate-cake.jpg'}
