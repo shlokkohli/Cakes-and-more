@@ -1,0 +1,16 @@
+import twilio from 'twilio'
+
+const accountSid = process.env.TWILIO_ACCOUNT_SID
+const authToken = process.env.TWILIO_AUTH_TOKEN
+const client = twilio(accountSid, authToken)
+
+export async function SendOTP(
+  phoneNumber: string,
+  code: string
+) {
+  const message = await client.messages.create({
+    body: `Your OTP is ${code}`,
+    from: process.env.TWILIO_PHONE_NUMBER,
+    to: phoneNumber,
+  })
+}

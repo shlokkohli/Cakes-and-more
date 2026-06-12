@@ -8,10 +8,19 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  phoneNo String
-  email   String?
-  address Address?
+  id            String    @id @default(cuid())
+  phoneNo       String
+  email         String?
+  address       Address?
+  name          String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
 }
 
 model Address {
@@ -19,7 +28,7 @@ model Address {
   tower   String
   houseNo String
   Society String
-  userId  Int    @unique
+  userId  String @unique
   user    User   @relation(fields: [userId], references: [id])
 }
 
@@ -45,4 +54,52 @@ model CakeCakeType {
   cakeType   CakeType @relation(fields: [CakeTypeId], references: [id])
 
   @@unique([cakeId, CakeTypeId])
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
