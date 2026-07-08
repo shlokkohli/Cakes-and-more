@@ -68,7 +68,7 @@ const page = () => {
 
         <button
           onClick={handleOTPSubmit}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#AC524C] p-2 text-white transition-all duration-300 hover:gap-3 hover:bg-[#AC524C]/90 focus:outline-none active:scale-95"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#AC524C] p-2 text-white transition-all duration-200 hover:bg-[#AC524C]/90 focus:outline-none active:gap-3"
         >
           Start Savouring
           <span>

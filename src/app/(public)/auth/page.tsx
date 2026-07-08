@@ -7,7 +7,7 @@ const page = () => {
   const router = useRouter()
 
   const handleOTPSubmit = () => {
-    router.push('/verify')
+    router.push('/onboard')
   }
 
   return (

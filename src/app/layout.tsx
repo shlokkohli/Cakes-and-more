@@ -28,19 +28,13 @@ export default async function RootLayout({
     headers: await headers(),
   }) */
   }
-  const session = 10
 
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
-      <body>
-        {session && <Navbar />}
-        <main className="mx-auto mt-8 flex max-w-6xl flex-1 p-4 pt-16">
-          {children}
-        </main>
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
