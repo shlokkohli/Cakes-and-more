@@ -1,9 +1,14 @@
+import { auth } from '@/lib/auth'
 import { Cake } from 'lucide-react'
-import { ShoppingBag } from 'lucide-react'
-import { LogIn } from 'lucide-react'
+import { ShoppingBag, User, LogIn } from 'lucide-react'
+import { headers } from 'next/headers'
 import Link from 'next/link'
 
-const Navbar = () => {
+const Navbar = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
   return (
     <nav className="fixed top-0 z-50 min-h-16 w-full border-b border-gray-200 bg-white/90 text-black backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between border-black p-4">
@@ -29,19 +34,32 @@ const Navbar = () => {
               className="cursor-pointer text-gray-500"
             />
           </Link>
-          <Link
-            href={'/profile'}
-            className="flex cursor-pointer items-center justify-center gap-2"
-          >
-            <LogIn
-              height={20}
-              width={20}
-              className="text-gray-500"
-            />
-            <p className="text-semibold text-sm text-gray-500">
-              Login
-            </p>
-          </Link>
+          {session ? (
+            <Link
+              href={'/profile'}
+              className="flex cursor-pointer items-center justify-center gap-2"
+            >
+              <User
+                height={20}
+                width={20}
+                className="text-gray-500"
+              />
+            </Link>
+          ) : (
+            <Link
+              href={'/verify'}
+              className="flex cursor-pointer items-center justify-center gap-2"
+            >
+              <LogIn
+                height={20}
+                width={20}
+                className="text-gray-500"
+              />
+              <p className="text-semibold text-sm text-gray-500">
+                Login
+              </p>
+            </Link>
+          )}
         </div>
       </div>
     </nav>

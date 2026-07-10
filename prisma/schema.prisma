@@ -8,17 +8,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  phoneNo       String
-  email         String?
-  address       Address?
-  name          String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
+  id                  String    @id @default(cuid())
+  phoneNumber         String    @unique
+  email               String?
+  address             Address?
+  name                String
+  emailVerified       Boolean   @default(false)
+  phoneNumberVerified Boolean?
+  onboardingCompleted Boolean   @default(false)
+  image               String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  sessions            Session[]
+  accounts            Account[]
 
   @@map("user")
 }
@@ -29,7 +31,7 @@ model Address {
   houseNo String
   Society String
   userId  String @unique
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Cake {
