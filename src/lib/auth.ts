@@ -15,6 +15,14 @@ export const auth = betterAuth({
         type: 'boolean',
         input: false,
       },
+      firstName: {
+        type: 'string',
+        input: false,
+      },
+      lastName: {
+        type: 'string',
+        input: false,
+      },
     },
   },
   plugins: [

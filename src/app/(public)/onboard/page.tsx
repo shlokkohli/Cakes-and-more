@@ -1,13 +1,46 @@
 'use client'
+import {
+  onboardFormInput,
+  onboardSchema,
+} from '@/schemas/onboard.schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { User, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import axios from 'axios'
+import { toast } from 'sonner'
 
 const page = () => {
   const router = useRouter()
 
-  const handleOTPSubmit = () => {
-    router.push('/')
+  const handleonboardSubmit = async (
+    formData: onboardFormInput
+  ) => {
+    try {
+      const response = await axios.post(
+        '/api/onboard',
+        formData
+      )
+      if (response.data.success) {
+        router.push('/')
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const backendError = error.response?.data.error
+        toast.error(backendError)
+      }
+    }
   }
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<onboardFormInput>({
+    resolver: zodResolver(onboardSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onSubmit',
+  })
 
   return (
     <div className="flex w-full items-center justify-center">
@@ -28,56 +61,73 @@ const page = () => {
           </p>
         </div>
 
-        <div className="flex w-full flex-col gap-4 self-start">
-          {/* first name */}
-          <div className="space-y-2">
-            <label
-              htmlFor="firstName"
-              className="text-sm font-bold"
-            >
-              First Name
-            </label>
-            <div className="flex items-center rounded-md border border-gray-300 p-1 px-2 focus-within:border-transparent focus-within:ring-3 focus-within:ring-[#D7A9A5]">
-              <input
-                id="firstName"
-                type="text"
-                className="p-1 px-2 focus:outline-none"
-                placeholder="John"
-              />
-            </div>
-          </div>
-
-          {/* last name */}
-          <div className="space-y-2">
-            <label
-              htmlFor="lastName"
-              className="text-sm font-bold"
-            >
-              Last Name
-            </label>
-            <div className="flex items-center rounded-md border border-gray-300 p-1 px-2 focus-within:border-transparent focus-within:ring-3 focus-within:ring-[#D7A9A5]">
-              <input
-                id="lastName"
-                type="text"
-                className="p-1 px-2 focus:outline-none"
-                placeholder="John"
-              />
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={handleOTPSubmit}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#AC524C] p-2 text-white transition-all duration-200 hover:bg-[#AC524C]/90 focus:outline-none active:gap-3"
+        <form
+          className="w-full space-y-2"
+          onSubmit={handleSubmit(handleonboardSubmit)}
         >
-          Start Savouring
-          <span>
-            <ArrowRight
-              height={15}
-              width={15}
-            />
-          </span>
-        </button>
+          <div className="flex w-full flex-col gap-4 self-start">
+            {/* first name */}
+            <div className="space-y-2">
+              <label
+                htmlFor="firstName"
+                className="text-sm font-bold"
+              >
+                First Name
+              </label>
+              <div className="flex items-center rounded-md border border-gray-300 p-1 px-2 focus-within:border-transparent focus-within:ring-3 focus-within:ring-[#D7A9A5]">
+                <input
+                  id="firstName"
+                  type="text"
+                  className="p-1 px-2 focus:outline-none"
+                  placeholder="John"
+                  {...register('firstName')}
+                />
+              </div>
+              {errors.firstName && (
+                <p className="text-sm text-red-500">
+                  {errors.firstName.message}
+                </p>
+              )}
+            </div>
+
+            {/* last name */}
+            <div className="space-y-2">
+              <label
+                htmlFor="lastName"
+                className="text-sm font-bold"
+              >
+                Last Name
+              </label>
+              <div className="flex items-center rounded-md border border-gray-300 p-1 px-2 focus-within:border-transparent focus-within:ring-3 focus-within:ring-[#D7A9A5]">
+                <input
+                  id="lastName"
+                  type="text"
+                  className="p-1 px-2 focus:outline-none"
+                  placeholder="John"
+                  {...register('lastName')}
+                />
+              </div>
+              {errors.lastName && (
+                <p className="text-sm text-red-500">
+                  {errors.lastName.message}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#AC524C] p-2 text-white transition-all duration-200 hover:bg-[#AC524C]/90 focus:outline-none active:gap-3"
+          >
+            Start Savouring
+            <span>
+              <ArrowRight
+                height={15}
+                width={15}
+              />
+            </span>
+          </button>
+        </form>
 
         <p className="max-w-xs text-center text-xs text-gray-500">
           By signing up, you agree to our Terms of Service

@@ -7,5 +7,5 @@
   "bracketSameLine": false,
   "singleAttributePerLine": true,
   "plugins": ["prettier-plugin-tailwindcss"],
-  "printWidth": 70
+  "printWidth": 60
 }
