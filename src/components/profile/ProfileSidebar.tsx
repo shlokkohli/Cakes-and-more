@@ -1,4 +1,5 @@
 'use client'
+import { authClient } from '@/lib/auth-client'
 import {
   User,
   Box,
@@ -7,10 +8,11 @@ import {
   LogOut,
 } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 export const ProfileSidebar = () => {
   const pathname = usePathname()
+  const router = useRouter()
 
   const sidebarLinks = [
     {
@@ -38,6 +40,16 @@ export const ProfileSidebar = () => {
       icon: CreditCard,
     },
   ]
+
+  const handleSignout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.replace('/')
+        },
+      },
+    })
+  }
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-2 shadow-sm shadow-black/10 md:min-w-65">
@@ -73,7 +85,10 @@ export const ProfileSidebar = () => {
           )
         })}
 
-        <button className="flex items-center justify-start gap-2 rounded-lg p-2 px-4 text-sm text-red-600 transition-transform duration-300 hover:translate-x-1 hover:bg-red-50">
+        <button
+          onClick={handleSignout}
+          className="flex items-center justify-start gap-2 rounded-lg p-2 px-4 text-sm text-red-600 transition-transform duration-300 hover:translate-x-1 hover:bg-red-50"
+        >
           <LogOut
             height={20}
             width={20}

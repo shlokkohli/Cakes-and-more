@@ -42,12 +42,20 @@ model Cake {
   description String
   price       Float
   types       CakeCakeType[]
+  images      CakeImage[]
 }
 
 model CakeType {
   id    Int            @id @default(autoincrement())
   name  String
   Cakes CakeCakeType[]
+}
+
+model CakeImage {
+  id       Int    @id @default(autoincrement())
+  imageUrl String
+  cake     Cake   @relation(fields: [cakeId], references: [id])
+  cakeId   Int
 }
 
 model CakeCakeType {
