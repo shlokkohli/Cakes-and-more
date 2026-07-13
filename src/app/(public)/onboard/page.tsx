@@ -7,29 +7,42 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { User, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { toast } from 'sonner'
+import { useMutation } from '@tanstack/react-query'
+
+interface onboardResponse {
+  success: boolean
+}
 
 const page = () => {
   const router = useRouter()
 
-  const handleonboardSubmit = async (
-    formData: onboardFormInput
-  ) => {
-    try {
-      const response = await axios.post(
+  const mutation = useMutation({
+    mutationFn: async (formData: onboardFormInput) => {
+      const response = await axios.post<onboardResponse>(
         '/api/onboard',
         formData
       )
-      if (response.data.success) {
+      return response.data
+    },
+    onSuccess: (data) => {
+      if (data.success) {
         router.push('/')
       }
-    } catch (error) {
+    },
+    onError: (error) => {
       if (axios.isAxiosError(error)) {
         const backendError = error.response?.data.error
         toast.error(backendError)
       }
-    }
+    },
+  })
+
+  const handleonboardSubmit = async (
+    formData: onboardFormInput
+  ) => {
+    mutation.mutate(formData)
   }
 
   const {
