@@ -4,10 +4,14 @@ import {
   onboardSchema,
 } from '@/schemas/onboard.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { User, ArrowRight } from 'lucide-react'
+import {
+  User,
+  ArrowRight,
+  LoaderCircle,
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 
@@ -130,15 +134,24 @@ const page = () => {
 
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#AC524C] p-2 text-white transition-all duration-200 hover:bg-[#AC524C]/90 focus:outline-none active:gap-3"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#AC524C] p-2 text-white transition-all duration-200 focus:outline-none active:gap-3 enabled:hover:bg-[#AC524C]/90 disabled:bg-[#AC524C]/90"
+            disabled={mutation.isPending}
           >
-            Start Savouring
-            <span>
-              <ArrowRight
-                height={15}
-                width={15}
-              />
-            </span>
+            {mutation.isPending ? (
+              <div className="flex items-center justify-center gap-2">
+                Please Wait
+                <span>
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-2">
+                Start Savouring
+                <span>
+                  <ArrowRight className="h-4 w-4" />
+                </span>
+              </div>
+            )}
           </button>
         </form>
 

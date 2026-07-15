@@ -38,6 +38,9 @@ export async function POST(request: Request) {
     )
   }
 
+  const fullName =
+    result.data.firstName + ' ' + result.data.lastName
+
   try {
     await prisma.user.update({
       where: {
@@ -46,6 +49,7 @@ export async function POST(request: Request) {
       data: {
         ...result.data,
         onboardingCompleted: true,
+        name: fullName,
       },
     })
     return NextResponse.json({ success: true })

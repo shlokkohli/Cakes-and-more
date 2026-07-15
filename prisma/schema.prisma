@@ -37,12 +37,13 @@ model Address {
 }
 
 model Cake {
-  id          Int            @id @default(autoincrement())
-  title       String
-  description String
-  price       Float
-  types       CakeCakeType[]
-  images      CakeImage[]
+  id               Int            @id @default(autoincrement())
+  title            String
+  shortDescription String
+  description      String
+  price            Decimal        @db.Decimal(10, 2)
+  types            CakeCakeType[]
+  images           CakeImage[]
 }
 
 model CakeType {
@@ -54,6 +55,7 @@ model CakeType {
 model CakeImage {
   id       Int    @id @default(autoincrement())
   imageUrl String
+  label    String
   cake     Cake   @relation(fields: [cakeId], references: [id])
   cakeId   Int
 }

@@ -1,12 +1,16 @@
 'use client'
-import { ShieldCheck } from 'lucide-react'
+import { LoaderCircle, ShieldCheck } from 'lucide-react'
 import { OTPInput } from 'input-otp'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { OTPSchema, OTPFormInput } from '@/schemas/otp.schema'
+import {
+  OTPSchema,
+  OTPFormInput,
+} from '@/schemas/otp.schema'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { authClient } from '@/lib/auth-client'
+import { useMutation } from '@tanstack/react-query'
 
 const page = () => {
   const router = useRouter()
@@ -22,23 +26,32 @@ const page = () => {
     reValidateMode: 'onSubmit',
   })
 
-  const handleOTPSubmit = async (formData: OTPFormInput) => {
-    try {
+  const mutation = useMutation({
+    mutationFn: async (formData: OTPFormInput) => {
       const otp = formData.otp
-      const { error } = await authClient.phoneNumber.verify({
-        phoneNumber: phoneNumber,
-        code: otp,
-        disableSession: false,
-      })
+      const { error } = await authClient.phoneNumber.verify(
+        {
+          phoneNumber: phoneNumber,
+          code: otp,
+          disableSession: false,
+        }
+      )
       if (error) {
-        toast.error(error.message)
-        return
+        throw new Error(error.message)
       }
+    },
+    onSuccess: () => {
       router.push('/onboard')
-    } catch (error) {
-      console.log('This is the error ', error)
-      toast.error('Something went wrong. Please try again')
-    }
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const handleOTPSubmit = async (
+    formData: OTPFormInput
+  ) => {
+    mutation.mutate(formData)
   }
 
   return (
@@ -60,7 +73,9 @@ const page = () => {
 
         <form onSubmit={handleSubmit(handleOTPSubmit)}>
           <div className="flex w-full flex-col gap-1 self-start">
-            <label className="text-sm font-bold">Enter OTP</label>
+            <label className="text-sm font-bold">
+              Enter OTP
+            </label>
             <div className="flex items-center rounded-md p-4">
               <Controller
                 name="otp"
@@ -93,9 +108,19 @@ const page = () => {
             )}
             <button
               type="submit"
-              className="w-full rounded-lg bg-[#AC524C] p-2 text-white transition-transform hover:bg-[#AC524C]/90 focus:outline-none active:scale-95"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#AC524C] p-2 text-white transition-all duration-200 focus:outline-none active:gap-3 enabled:hover:bg-[#AC524C]/90 disabled:bg-[#AC524C]/90"
+              disabled={mutation.isPending}
             >
-              Enter OTP
+              {mutation.isPending ? (
+                <div className="flex items-center justify-center gap-2">
+                  Submitting
+                  <span>
+                    <LoaderCircle className="h-4 w-4 animate-spin" />
+                  </span>
+                </div>
+              ) : (
+                <div>Enter OTP</div>
+              )}
             </button>
           </div>
         </form>

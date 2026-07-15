@@ -8,31 +8,31 @@ export const categories: Category[] = [
   {
     id: 1,
     name: 'Chocolate',
-    image: '/chocolate-cake.jpg',
+    image: '/chocolate-cake_pfuikg',
   },
   {
     id: 2,
     name: 'Vanilla',
-    image: '/vanilla-cake.jpg',
+    image: '/vanilla-cake_uo0wgo',
   },
   {
     id: 3,
     name: 'Red Velvet',
-    image: '/red-velvet-cake.jpg',
+    image: '/red-velvet-cake_oxu59c',
   },
   {
     id: 4,
     name: 'Cupcakes',
-    image: '/cupcakes.jpg',
+    image: '/cupcakes_w5t5wq',
   },
   {
     id: 5,
     name: 'Caramel',
-    image: '/carrot-cake.jpg',
+    image: '/carrot-cake_z2kqct',
   },
   {
     id: 6,
     name: 'Fruit',
-    image: '/wedding-cake.jpg',
+    image: '/wedding-cake_bq7cpq',
   },
 ]

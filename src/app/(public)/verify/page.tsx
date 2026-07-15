@@ -4,11 +4,12 @@ import {
   phoneNumberSchema,
   phoneNumberInput,
 } from '@/schemas/phone-number.schema'
-import { ShieldCheck } from 'lucide-react'
+import { LoaderCircle, ShieldCheck } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 
 const page = () => {
   const router = useRouter()
@@ -22,23 +23,35 @@ const page = () => {
     reValidateMode: 'onSubmit',
   })
 
-  const submitMobileNumber: SubmitHandler<phoneNumberInput> = async (
-    formData: phoneNumberInput
-  ) => {
-    const phoneNumber = '+91-' + formData.phoneNumber
-    try {
-      const { error } = await authClient.phoneNumber.sendOtp({
-        phoneNumber: phoneNumber,
-      })
+  const mutation = useMutation({
+    mutationFn: async (formData: phoneNumberInput) => {
+      const phoneNumber = '+91-' + formData.phoneNumber
+
+      const { error } =
+        await authClient.phoneNumber.sendOtp({
+          phoneNumber: phoneNumber,
+        })
+
       if (error) {
-        toast.error(error.message)
-        return
+        throw new Error(error.message)
       }
-      router.push(`/auth?phone=${encodeURIComponent(phoneNumber)}`)
-    } catch (error) {
-      console.log('Error occured sending OTP', error)
-      toast.error('Something went wrong, please try again')
-    }
+
+      return phoneNumber
+    },
+    onSuccess: (phoneNumber) => {
+      router.push(
+        `/auth?phone=${encodeURIComponent(phoneNumber)}`
+      )
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const submitMobileNumber: SubmitHandler<
+    phoneNumberInput
+  > = async (formData: phoneNumberInput) => {
+    mutation.mutate(formData)
   }
 
   return (
@@ -72,7 +85,9 @@ const page = () => {
               Phone Number
             </label>
             <div className="flex items-center rounded-md border border-gray-300 p-1 px-2 focus-within:border-transparent focus-within:ring-3 focus-within:ring-[#D7A9A5]">
-              <span className="text-sm text-gray-500">+91</span>
+              <span className="text-sm text-gray-500">
+                +91
+              </span>
               <input
                 id="phone"
                 type="tel"
@@ -95,15 +110,25 @@ const page = () => {
           </div>
           <button
             type="submit"
-            className="w-full rounded-lg bg-[#AC524C] p-2 text-white transition-transform hover:bg-[#AC524C]/90 focus:outline-none active:scale-95"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#AC524C] p-2 text-white transition-all duration-200 focus:outline-none active:gap-3 enabled:hover:bg-[#AC524C]/90 disabled:bg-[#AC524C]/90"
+            disabled={mutation.isPending}
           >
-            Get OTP
+            {mutation.isPending ? (
+              <div className="flex items-center justify-center gap-2">
+                Sending
+                <span>
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                </span>
+              </div>
+            ) : (
+              <div>Get OTP</div>
+            )}
           </button>
         </form>
 
         <p className="max-w-xs text-center text-xs text-gray-500">
-          By signing up, you agree to our Terms of Service and Privacy
-          Policy
+          By signing up, you agree to our Terms of Service
+          and Privacy Policy
         </p>
       </div>
     </div>

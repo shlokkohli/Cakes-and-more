@@ -8,7 +8,6 @@ const Navbar = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
-  console.log('This is the profile ', session)
 
   return (
     <nav className="fixed top-0 z-50 min-h-16 w-full border-b border-gray-200 bg-white/90 text-black backdrop-blur-md">
