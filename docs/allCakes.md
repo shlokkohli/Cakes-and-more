@@ -55,3 +55,16 @@
 </details>
 
 ## Step by Step Architecture
+
+1. First count the total number of entries in the whole "Cake" db.
+2. Create the seed value using count from the ShuffleConfig table and the current date and pass that seed value to the above deterministic hashed based function.
+3. Run both of these in parallel simultaneously.
+4. Also fetch the pageNumber from the url, and if page number is not provided, default back to 1.
+5. Set a default page size of 20 or 30 in the backend.
+6. Add a validation for page number, only accept page numbers 1 to N, ignore page number 0 or negative numbers, and if page number is not send, set it as 1.
+7. Running step 2 gives the list of id's of the cakes that should be shown on that page for which the api call is made.
+8. Use those id's to fetch the `Cake.title`, `Cake.shortDescription`, `Cake.price`. Also make a join to the `CakeImage Table` to find the right image to show, based on the label for that image.
+9. From those cake id's, also fetch those cake's category from the `CakeCakeType Table`.
+10. All data to the frontend will be send in 2 types, 1st will be: Cakes data which will be an array that will include all cakes details that we just fetches, second will be extra required things, like `page, totalItems: totalIds, totalPages`.
+11. Repeate the above steps on every new page number call.
+12. Also remember to add rate limiting to this page, even though it is a public page and anyone with or without a session can access this, still there should be a limit to this page per ip, lets take that 60.
