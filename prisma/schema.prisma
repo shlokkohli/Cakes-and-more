@@ -48,8 +48,13 @@ model Cake {
 
 model CakeType {
   id    Int            @id @default(autoincrement())
-  name  String
+  name  String         @unique
   Cakes CakeCakeType[]
+}
+
+model ShuffleConfig {
+  id    Int @id @default(1)
+  count Int
 }
 
 model CakeImage {
@@ -61,13 +66,14 @@ model CakeImage {
 }
 
 model CakeCakeType {
-  id         Int      @id @default(autoincrement())
+  id         Int  @id @default(autoincrement())
   cakeId     Int
-  cake       Cake     @relation(fields: [cakeId], references: [id])
-  CakeTypeId Int
-  cakeType   CakeType @relation(fields: [CakeTypeId], references: [id])
+  cake       Cake @relation(fields: [cakeId], references: [id])
+  cakeTypeId Int
 
-  @@unique([cakeId, CakeTypeId])
+  cakeType CakeType @relation(fields: [cakeTypeId], references: [id])
+
+  @@unique([cakeId, cakeTypeId])
 }
 
 model Session {

@@ -1,6 +1,6 @@
 # Home page cake fetching Architecture
 
-~~1. First know who the user is~~ **_(Not required since at the home screen can be visited by unauthenciated users as well)_**
+~~1. First know who the user is~~ **_(Not required since at the home screen can be visited by unauthenticated users as well)_**
 
 2. search the cakes table to find any random cakes (random cakes algo below)
 3. in the cakes db, it will contain all cakes names, the image of the cake, the title, the shortDescirption and other info that i might need to show
@@ -41,7 +41,7 @@
 2. Before understanding this, first understand how random results are generated from the computer itself, whenever we write Math.random(), the computer is never generating a random value. What it always generates is a deterministic output.
 3. Deterministic means the output looks like random, but it is strictly generated through rules and mathimatical conditions.
 4. Suppose take the exmaple of Math.random(), writing it always generates a random output because it takes a different input input each time, that might be time in nano seconds, if we feed it the exact same time, it is **_ALWAYS_** going to give the same output (Math.random() does not actually used md5 algo, it uses some other method to calculate random value, but it is also deterministic only).
-5. In algorithms like these, there is a seed value used, that seed values is a sort of mathimatical constant being feed into that formula, is we change that seed value, the output generated will also be differet.
+5. In algorithms like these, there is a seed value used, that seed values is a sort of mathimatical constant being feed into that formula, is we change that seed value, the output generated will also be different.
 6. In our case where we want to a generate randomly shuffled paginated data, it will work like this :
 7. We create a helper function that takes the seed value, offset, and limit as input.
 8. In our case, since the cakes data need to be shuffled everyday at midnight and also when a new cake is inserted in a db, the seed value will be current date (since changing this will change the output) and we need a method to know if a new cake has been inserted or not, for that we will keep a count variable.
