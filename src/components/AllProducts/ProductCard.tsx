@@ -1,31 +1,34 @@
 'use client'
-import type { Category } from '@/lib/categories'
 import { useRouter } from 'next/navigation'
 import { CldImage } from 'next-cloudinary'
+import type { Cake } from '@/types/Cake'
 
-type Props = Pick<Category, 'name' | 'image'>
-
-const ProductCard = ({ name, image }: Props) => {
+const ProductCard = ({ cake }: { cake: Cake }) => {
   const router = useRouter()
 
   return (
     <div className="group inline-block w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md shadow-black/20 transition-all duration-500 hover:shadow-lg hover:shadow-black/30">
       <div className="relative h-80 overflow-hidden">
         <CldImage
-          src={image}
-          alt={name}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          src={cake.images}
+          alt={cake.title}
+          height={300}
+          width={300}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
       </div>
 
       <div className="space-y-2 p-4">
-        <h3 className="text-lg font-semibold text-black group-hover:text-red-900">
-          {name}
-        </h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-black group-hover:text-red-900">
+            {cake.title}
+          </h3>
+          <span className="text-lg font-semibold text-black">
+            ${cake.price}
+          </span>
+        </div>
         <p className="font-mednum text-sm text-gray-600">
-          Rich layers of dark chocolate sponge with silky
-          ganache
+          {cake.shortDescription}
         </p>
 
         <button

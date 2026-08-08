@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const lastPage = Number(totalEntries / pageSize)
+  const lastPage = Math.ceil(totalEntries / pageSize)
 
   let ShuffleCounter
   try {
@@ -97,8 +97,14 @@ export async function GET(request: NextRequest) {
     )
   }
 
+  const formattedCakes = cakesData.map((eachCake) => ({
+    ...eachCake,
+    types: eachCake.types.map((t) => t.cakeType.name),
+    images: eachCake.images[0].imageUrl,
+  }))
+
   return NextResponse.json({
-    data: cakesData,
+    data: formattedCakes,
     page: safePageNumber,
     totalPages: lastPage,
   })

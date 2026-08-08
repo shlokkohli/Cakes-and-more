@@ -10,9 +10,10 @@ const CategoriesCard = ({ name, image }: Props) => {
         src={image}
         alt={name}
         loading="eager"
-        fill
+        height={200}
+        width={200}
         sizes="(max-width: 640px) 33vw, 16vw"
-        className="w-50 object-contain transition-transform duration-500 group-hover:scale-110 sm:h-45 sm:w-45"
+        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
       />
       <p className="absolute inset-0 flex items-center justify-center bg-black/40 font-medium text-white transition-all duration-300 group-hover:bg-black/30">
         {name}
