@@ -69,6 +69,7 @@ const AllProductsSection = () => {
           <ProductCard
             key={i}
             cake={eachCake}
+            priority={i < 4}
           />
         ))}
       </div>

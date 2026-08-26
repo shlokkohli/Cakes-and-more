@@ -12,6 +12,10 @@ export const cakesData = [
         imageUrl: 'chocolate-cake_pfuikg',
         label: 'thumbnail',
       },
+      {
+        imageUrl: 'chocolate-cake_pfuikg',
+        label: 'main',
+      },
     ],
   },
   {
@@ -26,6 +30,10 @@ export const cakesData = [
       {
         imageUrl: 'carrot-cake_z2kqct',
         label: 'thumbnail',
+      },
+      {
+        imageUrl: 'carrot-cake_z2kqct',
+        label: 'main',
       },
     ],
   },
@@ -42,6 +50,10 @@ export const cakesData = [
         imageUrl: 'cupcakes_w5t5wq',
         label: 'thumbnail',
       },
+      {
+        imageUrl: 'cupcakes_w5t5wq',
+        label: 'main',
+      },
     ],
   },
   {
@@ -56,6 +68,10 @@ export const cakesData = [
       {
         imageUrl: 'wedding-cake_bq7cpq',
         label: 'thumbnail',
+      },
+      {
+        imageUrl: 'wedding-cake_bq7cpq',
+        label: 'main',
       },
     ],
   },
@@ -72,6 +88,10 @@ export const cakesData = [
         imageUrl: 'red-velvet-cake_oxu59c',
         label: 'thumbnail',
       },
+      {
+        imageUrl: 'red-velvet-cake_oxu59c',
+        label: 'main',
+      },
     ],
   },
   {
@@ -86,6 +106,10 @@ export const cakesData = [
       {
         imageUrl: 'vanilla-cake_uo0wgo',
         label: 'thumbnail',
+      },
+      {
+        imageUrl: 'vanilla-cake_uo0wgo',
+        label: 'main',
       },
     ],
   },

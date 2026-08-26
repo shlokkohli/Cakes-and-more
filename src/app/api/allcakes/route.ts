@@ -2,6 +2,7 @@ import createShuffleList from '@/helper/createShuffleList'
 import getCurrentDate from '@/helper/getCurrentDate'
 import logger from '@/lib/logger'
 import prisma from '@/lib/prisma'
+import { redis } from '@/lib/redis'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
@@ -13,19 +14,7 @@ export async function GET(request: NextRequest) {
   const offset = Number((safePageNumber - 1) * 20)
   const pageSize = 20
 
-  let totalEntries
-  try {
-    totalEntries = await prisma.cake.count()
-  } catch (error) {
-    logger.warn('Unable to fetch total cakes entries')
-    return NextResponse.json(
-      { error: 'Something went wrong. Please try again' },
-      { status: 500 }
-    )
-  }
-
-  const lastPage = Math.ceil(totalEntries / pageSize)
-
+  const today = getCurrentDate()
   let ShuffleCounter
   try {
     ShuffleCounter = await prisma.shuffleConfig.findFirst({
@@ -46,7 +35,26 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const today = getCurrentDate()
+  const cacheKey = `cakes:page:${safePageNumber}:${today}:${ShuffleCounter?.count}`
+
+  const cachedData = await redis.get(cacheKey)
+  if (cachedData) {
+    return NextResponse.json(cachedData)
+  }
+
+  let totalEntries
+  try {
+    totalEntries = await prisma.cake.count()
+  } catch (error) {
+    logger.warn('Unable to fetch total cakes entries')
+    return NextResponse.json(
+      { error: 'Something went wrong. Please try again' },
+      { status: 500 }
+    )
+  }
+
+  const lastPage = Math.ceil(totalEntries / pageSize)
+
   const seedValue = `${ShuffleCounter}-${today}`
 
   let shuffledCakeIDs
@@ -103,9 +111,15 @@ export async function GET(request: NextRequest) {
     images: eachCake.images[0].imageUrl,
   }))
 
-  return NextResponse.json({
+  const responseData = {
     data: formattedCakes,
     page: safePageNumber,
     totalPages: lastPage,
+  }
+
+  await redis.set(cacheKey, responseData, {
+    ex: 24 * 60 * 60,
   })
+
+  return NextResponse.json(responseData)
 }

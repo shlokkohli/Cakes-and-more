@@ -3,7 +3,13 @@ import { useRouter } from 'next/navigation'
 import { CldImage } from 'next-cloudinary'
 import type { Cake } from '@/types/Cake'
 
-const ProductCard = ({ cake }: { cake: Cake }) => {
+const ProductCard = ({
+  cake,
+  priority,
+}: {
+  cake: Cake
+  priority: boolean
+}) => {
   const router = useRouter()
 
   return (
@@ -14,6 +20,7 @@ const ProductCard = ({ cake }: { cake: Cake }) => {
           alt={cake.title}
           height={300}
           width={300}
+          preload={priority}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
       </div>
